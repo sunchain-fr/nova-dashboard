@@ -41,7 +41,7 @@ class WidgetController
         $fields = $action->fields();
 
         $rules = collect($fields)->mapWithKeys(function (Field $field) {
-            return [ $field->attribute => $field->rules ];
+            return [$field->attribute => $field->rules];
         });
 
         /**
@@ -57,7 +57,7 @@ class WidgetController
         }
 
         $results = collect($action->fields())->mapWithKeys(function (Field $field) use ($request, $fakeModel) {
-            return [ $field->attribute => $field->fillForAction($request, $fakeModel) ];
+            return [$field->attribute => $field->fillForAction($request, $fakeModel)];
         });
 
         $actionFields = new ActionFields(collect($fakeModel->getAttributes()), $results->filter(function ($field) {
@@ -145,11 +145,11 @@ class WidgetController
 
             }
 
-            return abort(404, __('View :view not found.', [ 'view' => $viewKey ]));
+            return abort(404, __('View :view not found.', ['view' => $viewKey]));
 
         }
 
-        return abort(404, __('Dashboard :dashboard not found.', [ 'dashboard' => $dashboardKey ]));
+        return abort(404, __('Dashboard :dashboard not found.', ['dashboard' => $dashboardKey]));
 
     }
 
@@ -164,7 +164,7 @@ class WidgetController
 
         }
 
-        return abort(404, __('Widget :widget not found.', [ 'widget' => $widgetKey ]));
+        return abort(404, __('Widget :widget not found.', ['widget' => $widgetKey]));
 
     }
 
@@ -227,7 +227,7 @@ class WidgetController
         $this->findWidgetKey($request, $dashboardKey, $viewKey, $widgetKey);
 
         return response()->json(
-            (bool) $this->widgetModel()->newQuery()->whereKey($id)->delete()
+            (bool)$this->widgetModel()->newQuery()->whereKey($id)->delete()
         );
 
     }
@@ -267,7 +267,7 @@ class WidgetController
         /**
          * @var Card $first
          */
-        $first = $request->newResource()->cards($request)[ 0 ];
+        $first = $request->newResource()->cards($request)[0];
 
         return $first->instance->resolveValue(collect(), new Filters(''));
 
@@ -282,7 +282,7 @@ class WidgetController
 
         }
 
-        return abort(404, __('Dashboard :dashboard not found.', [ 'dashboard' => $dashboardKey ]));
+        return abort(404, __('Dashboard :dashboard not found.', ['dashboard' => $dashboardKey]));
 
     }
 
@@ -307,6 +307,25 @@ class WidgetController
 
         return response()->json(
             $view->resolveWidgetValue($widgetKey, collect($options), $filters)
+        );
+
+    }
+
+    public function fetchResources(): JsonResponse
+    {
+        return response()->json(Nova::$resources);
+    }
+
+    public function fetchFilters(NovaRequest $request): JsonResponse
+    {
+        $dashboardKey = $request->dashboardKey;
+        $viewKey = $request->view;
+
+        $view = $this->findViewByKey($request, $dashboardKey, $viewKey);
+
+        return response()->json(Nova::$resources
+
+//            $view->resolveWidgetValue($widgetKey, collect($options), $filters)
         );
 
     }

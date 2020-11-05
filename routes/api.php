@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('{dashboardKey}', [ WidgetController::class, 'getDashboard' ]);
+Route::get('/{dashboardKey}/views/{view}/filters', [ WidgetController::class, 'fetchFilters' ]);
+Route::get('/{dashboardKey}/resources/', [ WidgetController::class, 'fetchResources' ]);
 Route::post('/card/{resource}', [ WidgetController::class, 'resolveCardResource' ]);
 Route::post('/execute/action', [ WidgetController::class, 'executeAction' ]);
 Route::post('/fetch-widget-data', [ WidgetController::class, 'fetchWidgetData' ]);
